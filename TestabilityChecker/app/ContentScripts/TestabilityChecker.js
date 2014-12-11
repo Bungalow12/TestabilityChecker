@@ -15,6 +15,13 @@ var TestabilityChecker = (function () {
         enumerable: true,
         configurable: true
     });
+    /** Executes the Testability rules.
+     */
+    TestabilityChecker.prototype.checkTestability = function () {
+        for (var i = 0; i < TestabilityRules.rules.length; ++i) {
+            this._results.concat(TestabilityRules.rules[i](document.body));
+        }
+    };
     return TestabilityChecker;
 })();
 //# sourceMappingURL=TestabilityChecker.js.map
