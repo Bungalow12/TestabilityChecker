@@ -20,8 +20,10 @@
         "default_popup": "BrowserAction/popup.html"
     },
 
-    "content_scripts": {
-        "matches": [ "http*://*/*" ],
-        "js": ["TestabilityChecker.js", "ContentCommunicator.js"]
-    }
+    "content_scripts": [
+        {
+            "matches": [ "*://*/*" ],
+            "js": [ "Utilities/TestabilityResult.js", "Utilities/TestabilityRules.js", "ContentScripts/TestabilityChecker.js", "ContentScripts/ContentCommunicator.js" ]
+        }
+    ]
 }

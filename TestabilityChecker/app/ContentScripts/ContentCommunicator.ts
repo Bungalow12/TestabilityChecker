@@ -4,8 +4,10 @@
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.action == "checkTestability") {
-            //objectExtractor = new ObjectExtractor();
-            //objectExtractor.Extract();
-            //sendResponse({ PageContent: objectExtractor.PageContent });
+            testabilityChecker = new TestabilityChecker();
+            testabilityChecker.checkTestability();
+            var score: number = testabilityChecker.score;
+            var results = testabilityChecker.results;
+            sendResponse({ results: results, score: score });
         }
     });
