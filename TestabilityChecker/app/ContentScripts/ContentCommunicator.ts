@@ -6,6 +6,8 @@ chrome.runtime.onMessage.addListener(
         if (request.action == "checkTestability") {
             testabilityChecker = new TestabilityChecker();
             testabilityChecker.checkTestability();
-            sendResponse({ results: testabilityChecker.results });
+            var score: number = testabilityChecker.score;
+            var results = testabilityChecker.results;
+            sendResponse({ results: results, score: score });
         }
     });
