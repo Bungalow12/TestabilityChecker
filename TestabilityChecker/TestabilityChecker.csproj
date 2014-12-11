@@ -67,6 +67,7 @@
     <TypeScriptCompile Include="app\ContentScripts\ContentCommunicator.ts" />
     <TypeScriptCompile Include="app\ContentScripts\TestabilityChecker.ts" />
     <TypeScriptCompile Include="app\Utilities\TestabilityResult.ts" />
+    <TypeScriptCompile Include="app\Utilities\TestabilityRules.ts" />
     <TypeScriptCompile Include="scripts\typings\chrome\chrome-app.d.ts" />
     <TypeScriptCompile Include="scripts\typings\chrome\chrome.d.ts" />
     <TypeScriptCompile Include="scripts\typings\filesystem\filesystem.d.ts" />
