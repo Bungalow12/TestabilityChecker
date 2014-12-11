@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+
+    "name": "Testability Checker",
+    "description": "This extension will look over the current page and provide testability concerns and an overall testability score.",
+    "version": "0.1",
+    "author": "Jonathan Wills",
+
+    "permissions": [
+        "http*://*/*"
+    ],
+
+    "web_accessible_resources": [
+        "*.js.map",
+        "*.ts"
+    ],
+
+    "browser_action": {
+        "default_icon": "img/icon.png",
+        "default_popup": "BrowserAction/popup.html"
+    },
+
+    "content_scripts": {
+        "matches": [ "http*://*/*" ],
+        "js": ["TestabilityChecker.js", "ContentCommunicator.js"]
+    }
+}

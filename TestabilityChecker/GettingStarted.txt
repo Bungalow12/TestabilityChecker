@@ -1,0 +1,24 @@
+﻿This document is going to obviously cover how to get started with using this TypeScript based Chrome Extension project.
+
+Requirements:
+	TypeScript compiler: http://www.typescriptlang.org
+	Google Chrome: http://www.google.com/chrome
+
+Nice to haves:
+	Visual Studio 2013 with TypeScript extension.
+
+This project is being developed in Visual Studio because it really nicely supports TypeScript with intellisense and other fun things.
+You however can write this in any text editor of choice and use the Node.js based typescript compiler. The only thing that matters is the folder structure.
+
+How tos:
+	Installing the extension:
+		1. Open Chrome
+		2. Navigate to chrome://extensions
+		3. Check the Developer Mode box
+		4. Point to the app folder in this structure
+		5. Enjoy
+
+	Debugging the extension:
+		1. Install the extension or reload to pull in the changes
+		2. Use the Chrome Developer tools
+		
