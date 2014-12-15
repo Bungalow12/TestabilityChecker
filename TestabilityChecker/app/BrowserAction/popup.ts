@@ -2,7 +2,7 @@
 function setup() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: "checkTestability" }, function (response) {
-            var results: TestabilityResult[] = response.results;
+            var results: SerializableResult[] = response.results;
             var score = response.score;
 
             displayScore(score);
@@ -34,7 +34,7 @@ function displayScore(score: number) {
     scoreElement.textContent = score.toString() + "%";
 }
 
-function addResultToTable(result: TestabilityResult) {
+function addResultToTable(result: SerializableResult) {
     //Get a reference to our table.
     var resultTable: HTMLTableElement = <HTMLTableElement>document.getElementById("results");
 
