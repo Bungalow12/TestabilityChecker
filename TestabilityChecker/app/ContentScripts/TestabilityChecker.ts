@@ -11,8 +11,13 @@ class TestabilityChecker {
 
     /** Gets the results collected in execution of the checker.
      */
-    public get results(): TestabilityResult[] {
-        return this._results;
+    public get results(): SerializableResult[]{
+        var serializable: SerializableResult[] = [];
+
+        for (var i: number = 0; i < this._results.length; ++i) {
+            serializable[i] = { elementHtml: this._results[i].element.outerHTML, message: this._results[i].message };
+        }
+        return serializable;
     }
 
     /** Gets a testability score out of 100%.
@@ -37,5 +42,15 @@ class TestabilityChecker {
      */
     public highlightIssues() {
         //TODO: Add a red border to each element in the results list.
+        for (var i: number = 0; i < this._results.length; ++i) {
+            var element: HTMLElement = this._results[i].element;
+
+            var curStyle: string = element.getAttribute("style");
+            if (curStyle === null) {
+                curStyle = "";
+            }
+
+            element.setAttribute("style", curStyle + " border-style: ridge; border-color:#990000;");
+        }
     }
 }

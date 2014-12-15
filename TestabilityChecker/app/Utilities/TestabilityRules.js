@@ -25,14 +25,51 @@ var TestabilityRules = (function () {
         TestabilityRules.searchedElements = elements.length;
         for (var i = 0; i < elements.length; ++i) {
             var element = elements[i];
-            var html = element.outerHTML;
             var hasId = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
-            if (!hasId) {
-                results[index++] = { elementHtml: html, message: "Consider adding a unique id attribute." };
+            var isHidden = elements[i].getAttribute("hidden") !== null || elements[i].parentElement.getAttribute("hidden") !== null || elements[i].getAttribute("type") == "hidden" || elements[i].parentElement.getAttribute("type") == "hidden";
+            var hasFullHref = elements[i].getAttribute("href") !== null && elements[i].getAttribute("href").indexOf("http") == 0;
+            if (!hasId && !isHidden && !hasFullHref) {
+                results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
         return results;
     };
+    /** Checks elements for click handlers as those likely should be accessible to automation.
+     * @param rootElement The root HTMLElement to search from.
+     * @return An array of testability results for this rule.
+     */
+    TestabilityRules.hasClickHandler = function (rootElement) {
+        var results = [];
+        var index = 0;
+        var elements = [];
+        elements = TestabilityRules.walkDom(rootElement);
+        for (var i = 0; i < elements.length; ++i) {
+            var element = elements[i];
+            var hasId = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
+            var hasHandler = elements[i].onclick !== null;
+            if (!hasId && hasHandler) {
+                results[index++] = { element: element, message: "Consider adding a unique id attribute." };
+            }
+        }
+        return results;
+    };
+    /** Walks the entire DOM from the specified root.
+     * @param rootElement The root HTMLElement to search from.
+     * @return An array of elements in the DOM.
+     */
+    TestabilityRules.walkDom = function (rootElement) {
+        var elements = [];
+        elements = TestabilityRules.combineCollections(elements, rootElement.children);
+        for (var i = 0; i < rootElement.children.length; ++i) {
+            elements = elements.concat(TestabilityRules.walkDom(rootElement.children.item(i)));
+        }
+        return elements;
+    };
+    /** Combines an array with what turns out to be an HTMLElementCollection. This prevents awkward results from array.concat.
+     * @param collection1 The array that the items will move into.
+     * @param collection2 The HTMLElementCollection.
+     * @return The combined data in an array of HTMLElements.
+     */
     TestabilityRules.combineCollections = function (collection1, collection2) {
         var start = collection1.length;
         for (var i = 0; i < collection2.length; ++i) {
@@ -40,7 +77,7 @@ var TestabilityRules = (function () {
         }
         return collection1;
     };
-    TestabilityRules.rules = [TestabilityRules.hasIdCheck];
+    TestabilityRules.rules = [TestabilityRules.hasIdCheck, TestabilityRules.hasClickHandler];
     TestabilityRules.searchedElements = 0;
     return TestabilityRules;
 })();
