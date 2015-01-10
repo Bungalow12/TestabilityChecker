@@ -3,7 +3,7 @@ function setup() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: "checkTestability" }, function (response) {
             var results = response.results;
-            var score = response.score;
+            var score = Math.round(response.score);
             displayScore(score);
             for (var i = 0; i < results.length; ++i) {
                 addResultToTable(results[i]);
@@ -33,13 +33,12 @@ function addResultToTable(result) {
     var resultTable = document.getElementById("results");
     //Create a new row
     var row = resultTable.insertRow(resultTable.rows.length);
+    if (resultTable.rows.length % 2 == 0) {
+        row.setAttribute("style", row.getAttribute("style") + "; background: #F1F1F1;");
+    }
     //Element cell
     var cell1 = row.insertCell(0);
-    var element = document.createTextNode(result.elementHtml.split('>')[0]);
+    var element = document.createTextNode(result.elementHtml.split('>')[0] + '>');
     cell1.appendChild(element);
-    //Suggestion cell
-    var cell2 = row.insertCell(1);
-    var suggestion = document.createTextNode(result.message);
-    cell2.appendChild(suggestion);
 }
 //# sourceMappingURL=popup.js.map
