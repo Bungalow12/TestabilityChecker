@@ -41,7 +41,7 @@ function addResultToTable(result: SerializableResult) {
     //Create a new row
     var row: HTMLTableRowElement = <HTMLTableRowElement>resultTable.insertRow(resultTable.rows.length);
     if (resultTable.rows.length % 2 == 0) {
-        row.setAttribute("style", row.getAttribute("style") + "; background: #F1F1F1;");
+        row.setAttribute("style", row.getAttribute("style") + "; background: #EAEAEA;");
     }
 
     //Element cell
