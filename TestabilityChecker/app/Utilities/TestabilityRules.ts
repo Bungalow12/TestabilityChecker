@@ -42,7 +42,7 @@ class TestabilityRules {
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) ||
                 TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
 
-            if (!hasId && !isHidden && !hasUniqueClassName && !hasFullHref) {
+            if (!(hasId || hasUniqueClassName) && !isHidden && !hasFullHref) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
@@ -68,7 +68,7 @@ class TestabilityRules {
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) ||
                 TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
 
-            if (!hasId && !hasUniqueClassName && hasHandler) {
+            if (!(hasId || hasUniqueClassName) && hasHandler) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
