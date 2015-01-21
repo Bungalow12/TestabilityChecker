@@ -28,7 +28,8 @@ var TestabilityRules = (function () {
             var hasId = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
             var isHidden = elements[i].getAttribute("hidden") !== null || elements[i].parentElement.getAttribute("hidden") !== null || elements[i].getAttribute("type") == "hidden" || elements[i].parentElement.getAttribute("type") == "hidden";
             var hasFullHref = elements[i].getAttribute("href") !== null && elements[i].getAttribute("href").indexOf("http") == 0;
-            if (!hasId && !isHidden && !hasFullHref) {
+            var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) || TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
+            if (!hasId && !isHidden && !hasUniqueClassName && !hasFullHref) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
@@ -47,11 +48,35 @@ var TestabilityRules = (function () {
             var element = elements[i];
             var hasId = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
             var hasHandler = elements[i].onclick !== null;
-            if (!hasId && hasHandler) {
+            var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) || TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
+            if (!hasId && !hasUniqueClassName && hasHandler) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
         return results;
+    };
+    /** Checks a class name collection for duplicate combinations.
+     * @param classNames a collection of class names from element.classList.
+     * @return True if the class name combination is unique and is not too long.
+    */
+    TestabilityRules.isUniqueClassName = function (classNames) {
+        var selector = "";
+        var result = false;
+        if (classNames.length > 2) {
+            return false;
+        }
+        for (var i = 0; i < classNames.length; ++i) {
+            if (classNames[i] != "") {
+                selector += "." + classNames[i];
+            }
+        }
+        try {
+            result = (document.querySelectorAll(selector).length != 1);
+        }
+        catch (e) {
+            result = false;
+        }
+        return result;
     };
     /** Walks the entire DOM from the specified root.
      * @param rootElement The root HTMLElement to search from.
