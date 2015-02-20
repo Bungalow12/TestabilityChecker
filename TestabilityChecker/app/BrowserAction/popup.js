@@ -1,3 +1,5 @@
+/// <reference path="../Utilities/TestabilityResult.ts" />
+/// <reference path="../../scripts/typings/chrome/chrome.d.ts" />
 //Request Testability data for the page.
 function setup() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {

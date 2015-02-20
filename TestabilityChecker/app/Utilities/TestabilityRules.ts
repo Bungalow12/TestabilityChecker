@@ -1,8 +1,11 @@
-﻿/** Static class containing rule implementation
+﻿/// <reference path="TestabilityResult.ts"/>
+
+/** Static class containing rule implementation
  */
 class TestabilityRules {
 
-    public static rules: { (rootElement: HTMLElement): TestabilityResult[] }[] = [TestabilityRules.hasIdCheck, TestabilityRules.hasClickHandler];
+    public static rules: { (rootElement: HTMLElement): TestabilityResult[] }[] =
+        [TestabilityRules.hasIdCheck, TestabilityRules.hasClickHandler, TestabilityRules.hasCorrectCssName];
     public static searchedElements: number = 0;
 
     /** Checks specfic element types for an uniquely identifiable attribute.
@@ -17,16 +20,20 @@ class TestabilityRules {
         //Crawl the tree for specific elements
 
         //Input fields
-        var elements: HTMLElement[] = TestabilityRules.combineCollections([], <HTMLElement[]><any>document.getElementsByTagName("input"));
+        var elements: HTMLElement[] = TestabilityRules.combineCollections([],
+            <HTMLElement[]><any>document.getElementsByTagName("input"));
 
         //Hyperlinks
-        elements = TestabilityRules.combineCollections(elements, <HTMLElement[]><any>document.getElementsByTagName("a"));
+        elements = TestabilityRules.combineCollections(elements,
+            <HTMLElement[]><any>document.getElementsByTagName("a"));
 
         //Buttons
-        elements = TestabilityRules.combineCollections(elements, <HTMLElement[]><any>document.getElementsByTagName("button"));
+        elements = TestabilityRules.combineCollections(elements,
+            <HTMLElement[]><any>document.getElementsByTagName("button"));
 
         //Tables
-        elements = TestabilityRules.combineCollections(elements, <HTMLElement[]><any>document.getElementsByTagName("table"));
+        elements = TestabilityRules.combineCollections(elements,
+            <HTMLElement[]><any>document.getElementsByTagName("table"));
 
         //TODO: Add in a way to check elements that do not contain static text.
 
@@ -35,10 +42,14 @@ class TestabilityRules {
 
         for (var i: number = 0; i < elements.length; ++i) {
             var element: HTMLElement = elements[i];
-            var hasId: boolean = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
-            var isHidden: boolean = elements[i].getAttribute("hidden") !== null || elements[i].parentElement.getAttribute("hidden") !== null ||
-                elements[i].getAttribute("type") == "hidden" || elements[i].parentElement.getAttribute("type") == "hidden";
-            var hasFullHref: boolean = elements[i].getAttribute("href") !== null && elements[i].getAttribute("href").indexOf("http") == 0;
+            var hasId: boolean = elements[i].getAttribute("id") !== null ||
+                elements[i].parentElement.getAttribute("id") !== null;
+            var isHidden: boolean = elements[i].getAttribute("hidden") !== null ||
+                elements[i].parentElement.getAttribute("hidden") !== null ||
+                elements[i].getAttribute("type") == "hidden" ||
+                elements[i].parentElement.getAttribute("type") == "hidden";
+            var hasFullHref: boolean = elements[i].getAttribute("href") !== null &&
+                elements[i].getAttribute("href").indexOf("http") == 0;
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) ||
                 TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
 
@@ -63,13 +74,36 @@ class TestabilityRules {
         //Process the elements.
         for (var i: number = 0; i < elements.length; ++i) {
             var element: HTMLElement = elements[i];
-            var hasId: boolean = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
+            var hasId: boolean = elements[i].getAttribute("id") !== null ||
+                elements[i].parentElement.getAttribute("id") !== null;
             var hasHandler: boolean = elements[i].onclick !== null;
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) ||
                 TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
 
             if (!(hasId || hasUniqueClassName) && hasHandler) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
+            }
+        }
+        return results;
+    }
+
+    /** Checks elements for class names that contain an underscore when they should use a dash.
+     * @param rootElement The root HTMLElement to search from.
+     * @return An array of testability results for this rule.
+     */
+    public static hasCorrectCssName(rootElement: HTMLElement): TestabilityResult[] {
+        var results: TestabilityResult[] = [];
+        var index: number = 0;
+        var elements: HTMLElement[] = [];
+
+        elements = TestabilityRules.walkDom(rootElement);
+
+        //Process the elements.
+        for (var i: number = 0; i < elements.length; ++i) {
+            var element: HTMLElement = elements[i];
+
+            if (element.classList.contains("_")){
+                results[index++] = { element: element, message: "Use a dash('-') instead of an underscore('_')" };
             }
         }
         return results;
@@ -118,7 +152,8 @@ class TestabilityRules {
         return elements;
     }
 
-    /** Combines an array with what turns out to be an HTMLElementCollection. This prevents awkward results from array.concat.
+    /** Combines an array with what turns out to be an HTMLElementCollection.
+     * This prevents awkward results from array.concat.
      * @param collection1 The array that the items will move into.
      * @param collection2 The HTMLElementCollection.
      * @return The combined data in an array of HTMLElements.

@@ -1,4 +1,7 @@
-﻿/** Class responsible for performing the check on the content.
+﻿/// <reference path = "../Utilities/TestabilityResult.ts" />
+/// <reference path = "../Utilities/TestabilityRules.ts" />
+
+/** Class responsible for performing the check on the content.
  */
 class TestabilityChecker {
     private _results: TestabilityResult[];

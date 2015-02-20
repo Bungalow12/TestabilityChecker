@@ -1,3 +1,4 @@
+/// <reference path="TestabilityResult.ts"/>
 /** Static class containing rule implementation
  */
 var TestabilityRules = (function () {
@@ -29,7 +30,7 @@ var TestabilityRules = (function () {
             var isHidden = elements[i].getAttribute("hidden") !== null || elements[i].parentElement.getAttribute("hidden") !== null || elements[i].getAttribute("type") == "hidden" || elements[i].parentElement.getAttribute("type") == "hidden";
             var hasFullHref = elements[i].getAttribute("href") !== null && elements[i].getAttribute("href").indexOf("http") == 0;
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) || TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
-            if (!hasId && !isHidden && !hasUniqueClassName && !hasFullHref) {
+            if (!(hasId || hasUniqueClassName) && !isHidden && !hasFullHref) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
             }
         }
@@ -49,8 +50,25 @@ var TestabilityRules = (function () {
             var hasId = elements[i].getAttribute("id") !== null || elements[i].parentElement.getAttribute("id") !== null;
             var hasHandler = elements[i].onclick !== null;
             var hasUniqueClassName = TestabilityRules.isUniqueClassName(elements[i].classList) || TestabilityRules.isUniqueClassName(elements[i].parentElement.classList);
-            if (!hasId && !hasUniqueClassName && hasHandler) {
+            if (!(hasId || hasUniqueClassName) && hasHandler) {
                 results[index++] = { element: element, message: "Consider adding a unique id attribute." };
+            }
+        }
+        return results;
+    };
+    /** Checks elements for class names that contain an underscore when they should use a dash.
+     * @param rootElement The root HTMLElement to search from.
+     * @return An array of testability results for this rule.
+     */
+    TestabilityRules.hasCorrectCssName = function (rootElement) {
+        var results = [];
+        var index = 0;
+        var elements = [];
+        elements = TestabilityRules.walkDom(rootElement);
+        for (var i = 0; i < elements.length; ++i) {
+            var element = elements[i];
+            if (element.classList.contains("_")) {
+                results[index++] = { element: element, message: "Use a dash('-') instead of an underscore('_')" };
             }
         }
         return results;
@@ -90,7 +108,8 @@ var TestabilityRules = (function () {
         }
         return elements;
     };
-    /** Combines an array with what turns out to be an HTMLElementCollection. This prevents awkward results from array.concat.
+    /** Combines an array with what turns out to be an HTMLElementCollection.
+     * This prevents awkward results from array.concat.
      * @param collection1 The array that the items will move into.
      * @param collection2 The HTMLElementCollection.
      * @return The combined data in an array of HTMLElements.
@@ -102,7 +121,7 @@ var TestabilityRules = (function () {
         }
         return collection1;
     };
-    TestabilityRules.rules = [TestabilityRules.hasIdCheck, TestabilityRules.hasClickHandler];
+    TestabilityRules.rules = [TestabilityRules.hasIdCheck, TestabilityRules.hasClickHandler, TestabilityRules.hasCorrectCssName];
     TestabilityRules.searchedElements = 0;
     return TestabilityRules;
 })();

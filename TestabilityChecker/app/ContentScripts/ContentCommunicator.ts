@@ -1,4 +1,7 @@
-﻿var testabilityChecker: TestabilityChecker;
+﻿/// <reference path = "TestabilityChecker.ts" />
+/// <reference path = "../../scripts/typings/chrome/chrome.d.ts" />
+
+var testabilityChecker: TestabilityChecker;
 
 //Message Handler
 chrome.runtime.onMessage.addListener(

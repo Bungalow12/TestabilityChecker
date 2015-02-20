@@ -1,3 +1,5 @@
+/// <reference path = "../Utilities/TestabilityResult.ts" />
+/// <reference path = "../Utilities/TestabilityRules.ts" />
 /** Class responsible for performing the check on the content.
  */
 var TestabilityChecker = (function () {
